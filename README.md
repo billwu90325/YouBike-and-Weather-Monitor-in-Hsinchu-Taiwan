@@ -1,4 +1,4 @@
 # YouBike-and-Weather-Monitor-in-Hsinchu-Taiwan
-using API and web crawler to develop real-time monitor
+It's a simple interactive code using API and web crawler, including beautiful soup and selenium, to develop real-time monitor of YouBike and weather conditions in Hsinchu, Taiwan.
 
 to utilize the APIs, you need to refresh or apply your own google key & API keys
