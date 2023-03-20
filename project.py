@@ -18,27 +18,23 @@ google_key = 'AIzaSyCbQ1CF7ReVjmlY-w3XTyEip_fmPcps94I'
 determine = 1
 
 while(determine == 1):
-    
-    # <GoogleMaps Geocoding API>
+    # GoogleMaps Geocoding API
     while(True):
         try:
             address = input('Enter a place:')
             location_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=' + google_key
             location_response = requests.get(location_url).json()
             # acquire information of specific location
-            
             lat = str(location_response['results'][0]['geometry']['location']['lat'])
             lng = str(location_response['results'][0]['geometry']['location']['lng'])
             break
-            
         except:
             print('Invalid location.')
 
 
-    # <Time>
+    # Time
     now = str(datetime.datetime.now())
-    print('-當前時間:' + now)
-    # acquire current time 
+    print('- current time:' + now)
     
     times = []
     for item in now.split():
@@ -53,7 +49,7 @@ while(determine == 1):
     # modify time into the pattern of 'Center Weather Bureau'
 
 
-    # <YouBike Station Map>
+    # YouBike Station Map
     options = Options()
     options.add_argument("--disable-notifications")
      
@@ -84,7 +80,7 @@ while(determine == 1):
     # collecting information with BeautifulSoup & Regular Expression
     
     for index in range(len(area_list2)):
-        area_list2[index] = '新竹市東區'
+        area_list2[index] = 'East District, Hsinchu City'
         
     results.extend(results2)
     stations.extend(stations2)
@@ -124,7 +120,6 @@ while(determine == 1):
                     areaname = area_list[index]
                 else:
                     pass
-
         except:
             counter += 1
             
@@ -133,16 +128,16 @@ while(determine == 1):
         print('Can\'t find a suitable station.')
         
     else:
-        print('-最佳站點:' + result)
-        print('  可借車輛:' + str(available), '可停空位:' + str(rest))
+        print('- best spot:' + result)
+        print('  available bike :' + str(available), 'available space:' + str(rest))
 
         min_dist_url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+str(lat)+','+str(lng)+'&destinations='+lat2+','+lng2+'&mode=walking&key='+google_key
         min_dist_response = urlopen(min_dist_url, context=context).read().decode()
         min_dist_data = json.loads(min_dist_response)
         # acquire distance & walking distance with 'googlemaps distance matrix' API
 
-        print('  距離:' + min_dist_data['rows'][0]['elements'][0]['distance']['text'])
-        print('  步行時間:' + min_dist_data['rows'][0]['elements'][0]['duration']['text'])
+        print('  distance:' + min_dist_data['rows'][0]['elements'][0]['distance']['text'])
+        print('  time of walking:' + min_dist_data['rows'][0]['elements'][0]['duration']['text'])
         
         station_url =  'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=YouBike'+ result +'&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key='+google_key
         station_response = requests.get(station_url).json()
@@ -158,7 +153,7 @@ while(determine == 1):
         print()
 
 
-    # <Weather>
+    # Weather
     weather_dataid = 'F-D0047-053'
     weather_apikey = 'CWB-D58BA36B-59B7-429B-AC5A-A624166D16C6'
     weather_format = 'JSON'
@@ -173,9 +168,9 @@ while(determine == 1):
         WE = []
         datermine_area = area + region['locationName']
         if datermine_area == areaname:
-            print('-天氣區域:' + areaname)
+            print('- weather region:' + areaname)
             for factor in region['weatherElement']:
-                if factor['description'] == '天氣預報綜合描述':
+                if factor['description'] == 'weather summary':
                     for select in factor['time']:
                         if select['startTime'] == starttime:
                             WEI = str(select['elementValue'])
@@ -190,35 +185,33 @@ while(determine == 1):
                             # ouput the weather elements
                                 
             print()
-            percentage = re.findall('降雨機率 (.+?)%', WE[0])
-            temperature = re.findall('溫度攝氏(.+?)度', WE[1])
-            windspeed = re.findall('每秒(.+?)公尺', WE[2])
+            percentage = re.findall('probability of precipitation(.+?)%', WE[0])
+            temperature = re.findall('(.+?) celsius', WE[1])
+            windspeed = re.findall('(.+?) meter per second', WE[2])
 
             description = ''
             counter = 0
             
             if int(percentage[0]) > 80:
-                description = '高機率下雨，'
+                description = 'high probability of precipitation'
                 counter = 1
             if int(temperature[0]) < 15:
-                description += '溫度過低，'
+                description += 'low temperature'
                 counter = 1 
             if int(windspeed[0]) > 10:
-                description += '風速過大，'
+                description += 'strong wind'
                 counter = 1
-
-
+                
             if counter == 1:
-                print('-騎乘推薦:'+ description + '不建議騎乘')
+                print('- advice:'+ description + 'not recommend')
             else:
-                print('-騎乘推薦:天氣宜人，適合騎乘')
+                print('- advice: good weather, recommend')
             # output recommendations of system
-            
-            
         else:
             pass
 
-    # <Interaction>
+
+    # Interaction
     while(True):
         print('-Enter Q to quit, R to refresh')
         command = input('command:')
@@ -229,10 +222,3 @@ while(determine == 1):
             break
         else:
             determine = 0
-
-        # interact with users
-
-
-
-
-
