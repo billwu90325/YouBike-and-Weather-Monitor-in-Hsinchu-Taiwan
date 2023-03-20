@@ -13,7 +13,7 @@ from PIL import Image
 from io import BytesIO 
 
 context = ssl._create_unverified_context()
-google_key = 'AIzaSyCbQ1CF7ReVjmlY-w3XTyEip_fmPcps94I'
+google_key = '*****s'
 
 determine = 1
 
